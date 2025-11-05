@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Darpan Wears</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{--brand:#0d6efd;--muted:#6c757d}
+    body{padding-top:96px;background:#f8f9fa}
+    .site-title{font-weight:700}
+    .product-card{transition:transform .12s,box-shadow .12s}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    .price-old{text-decoration:line-through;color:var(--muted);margin-right:.5rem}
+    .badge-sp{background:#ffc107;color:#000}
+    .admin-area{background:#fff;padding:1rem;border-radius:.6rem;box-shadow:0 6px 20px rgba(0,0,0,.04)}
+    .product-img{object-fit:cover;width:100%;height:180px;border-radius:.4rem .4rem 0 0}
+    footer{padding:1.5rem 0;color:#6c757d}
+    .required{color:#d63384}
+    @media(max-width:576px){.product-img{height:150px}}
+    .icon-btn{padding:.28rem .6rem;font-size:.9rem}
+    .brand-top {display:flex; gap:.75rem; align-items:center}
+    .instagram-link {text-decoration:none}
+    .category-pill {cursor:pointer}
+    .sales-list {max-height:220px; overflow:auto}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" aria-label="The Darpan Wears Home">
+        <div class="brand-top">
+          <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M2.97 1a1 1 0 0 0-.97.757L.42 6.58A1 1 0 0 0 1.36 8h13.28a1 1 0 0 0 .94-1.42L13.999.757A1 1 0 0 0 13.03 0H2.97zM1 9v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9H1z"/>
+          </svg>
+          <div class="d-flex flex-column">
+            <span class="site-title">The Darpan Wears</span>
+            <small class="text-muted">Quality that fits your style</small>
+          </div>
+        </div>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="topNav">
+        <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0" id="categoryNav">
+          <!-- categories inserted here -->
+        </ul>
+
+        <form class="d-flex me-3" role="search" onsubmit="return false;">
+          <input id="searchInput" class="form-control me-2" type="search" placeholder="Search products" aria-label="Search">
+          <button id="clearSearch" type="button" class="btn btn-outline-secondary" title="Clear search">✕</button>
+        </form>
+
+        <div class="d-flex gap-2 align-items-center">
+          <a id="instaLink" class="instagram-link me-2" href="https://www.instagram.com/darpan_wears?igsh=a2pkYXhpajVwNnR3" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.352 3.608 1.327.975.975 1.266 2.243 1.327 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.352 2.633-1.327 3.608-.975.975-2.243 1.266-3.608 1.327-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.352-3.608-1.327-.975-.975-1.266-2.243-1.327-3.608C2.175 15.748 2.163 15.368 2.163 12s.012-3.584.07-4.85c.062-1.366.352-2.633 1.327-3.608C4.534 2.585 5.802 2.293 7.168 2.231 8.434 2.173 8.814 2.163 12 2.163zm0-2.163C8.735 0 8.332.012 7.053.07 5.77.127 4.607.45 3.677 1.38c-.93.93-1.253 2.093-1.31 3.376C2.012 6.332 2 6.735 2 10s.012 3.668.07 4.947c.057 1.283.38 2.446 1.31 3.376.93.93 2.093 1.253 3.376 1.31C8.332 19.988 8.735 20 12 20s3.668-.012 4.947-.07c1.283-.057 2.446-.38 3.376-1.31.93-.93 1.253-2.093 1.31-3.376C21.988 13.668 22 13.265 22 10s-.012-3.668-.07-4.947c-.057-1.283-.38-2.446-1.31-3.376-.93-.93-2.093-1.253-3.376-1.31C15.668.012 15.265 0 12 0z"/><path d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16.2a4.2 4.2 0 1 1 0-8.4 4.2 4.2 0 0 1 0 8.4zM18.406 4.594a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+          </a>
+          <button class="btn btn-outline-primary" id="adminBtn">Admin</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="container">
+    <div class="row g-4">
+      <!-- Products -->
+      <section class="col-lg-8">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h4 class="mb-0">Products</h4>
+          <div><span id="resultCount" class="text-muted"></span></div>
+        </div>
+
+        <!-- Top category pills (easy select) -->
+        <div id="categoryPills" class="mb-3"></div>
+
+        <!-- Grid -->
+        <div id="productGrid" class="row g-3" aria-live="polite"></div>
+      </section>
+
+      <!-- Admin area -->
+      <aside class="col-lg-4">
+        <div id="adminAreaPlaceholder" class="admin-area text-center">
+          <h6>Admin Panel (Locked)</h6>
+          <p class="small text-muted">Enter admin password to manage products & view sales.</p>
+          <button class="btn btn-primary" id="openAdminLogin">Enter Password</button>
+        </div>
+
+        <div id="adminArea" class="admin-area" style="display:none;" aria-hidden="true">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="mb-0">Admin — Manage Products</h6>
+            <div><button class="btn btn-sm btn-outline-secondary" id="adminLogout">Logout</button></div>
+          </div>
+
+          <!-- Form -->
+          <form id="adminForm" class="mb-3" novalidate>
+            <input type="hidden" id="p_id">
+            <div class="mb-2"><label class="form-label">Product Name <span class="required">*</span></label><input id="p_name" class="form-control" required></div>
+            <div class="mb-2"><label class="form-label">Description</label><textarea id="p_desc" class="form-control" rows="2"></textarea></div>
+            <div class="mb-2"><label class="form-label">Category <span class="required">*</span></label>
+              <select id="p_cat" class="form-select">
+                <option>Shirts</option><option>T-Shirts</option><option>Jeans</option><option>Shoes</option><option>Electronic Devices</option>
+              </select>
+            </div>
+
+            <div class="mb-2 row gx-2">
+              <div class="col-6"><label class="form-label">Original Price (₹)</label><input type="number" id="p_orig" class="form-control" min="0"></div>
+              <div class="col-6"><label class="form-label">Selling Price (₹) <span class="required">*</span></label><input type="number" id="p_sell" class="form-control" min="0" required></div>
+            </div>
+
+            <div class="mb-2 row gx-2">
+              <div class="col-6"><label class="form-label">Special Price</label><input type="number" id="p_special" class="form-control" min="0"></div>
+              <div class="col-6"><label class="form-label">Size</label><input id="p_size" class="form-control" placeholder="M,L,XL or 'One Size'"></div>
+            </div>
+
+            <div class="mb-2"><label class="form-label">Material</label><input id="p_mat" class="form-control"></div>
+            <div class="mb-2"><label class="form-label">Image URL</label><input id="p_img" class="form-control" placeholder="https://..."></div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success" id="adminSaveBtn">Add Product</button>
+              <button type="button" class="btn btn-outline-secondary" id="adminClearBtn">Clear Form</button>
+            </div>
+          </form>
+
+          <!-- Product list -->
+          <div>
+            <h6 class="small mb-2">Existing Products</h6>
+            <div id="adminProductList" class="list-group mb-3" style="max-height:220px; overflow:auto;"></div>
+          </div>
+
+          <!-- Sales analytics -->
+          <div>
+            <h6 class="small mb-2">Live Sales Analytics (Admin only)</h6>
+            <canvas id="salesChart" width="400" height="220"></canvas>
+            <div class="small-muted mt-2 mb-1">Recent Orders</div>
+            <div id="salesList" class="list-group sales-list"></div>
+          </div>
+        </div>
+
+        <div class="mt-3 text-center small text-muted">
+          <p class="mb-1">Admin password: <strong>darpan2025</strong> (client-side only)</p>
+          <p class="mb-0">Products & sales saved in browser localStorage.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="mt-5 border-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div>© 2025 The Darpan Wears</div>
+      <div class="text-muted small">Built with ❤️ — Front-end demo</div>
+    </div>
+  </footer>
+
+  <!-- Order Modal -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="orderForm" class="modal-content" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="orderModalLabel">Place Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="orderProductSummary" class="mb-2"></div>
+
+          <div class="mb-2"><label class="form-label">Name <span class="required">*</span></label><input id="o_name" class="form-control" required></div>
+          <div class="mb-2"><label class="form-label">Phone Number <span class="required">*</span></label><input id="o_phone" class="form-control" type="tel" pattern="[0-9+ ]{6,20}" required></div>
+          <div class="mb-2"><label class="form-label">State <span class="required">*</span></label><input id="o_state" class="form-control" required></div>
+          <div class="mb-2"><label class="form-label">City <span class="required">*</span></label><input id="o_city" class="form-control" required></div>
+          <div class="mb-2"><label class="form-label">Village Name</label><input id="o_village" class="form-control"></div>
+          <div class="mb-2"><label class="form-label">Pincode <span class="required">*</span></label><input id="o_pin" class="form-control" pattern="[0-9]{4,8}" required></div>
+
+          <!-- Size area (injected per product: dropdown or text) -->
+          <div id="orderSizeContainer" class="mb-2"></div>
+
+          <div class="form-text small mt-2 mb-2">Choose payment method to open WhatsApp (works with WhatsApp & WhatsApp Business; opens WhatsApp or WhatsApp Web).</div>
+
+          <div class="d-grid gap-2">
+            <button id="payCodBtn" type="button" class="btn btn-outline-primary">Cash on Delivery</button>
+            <button id="payOnlineBtn" type="button" class="btn btn-success">Online Payment</button>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin password modal -->
+  <div class="modal fade" id="adminPassModal" tabindex="-1" aria-labelledby="adminPassModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="adminPassForm" class="modal-content" onsubmit="return false;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="adminPassModalLabel">Admin Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Enter Password</label>
+          <input id="adminPassword" class="form-control" type="password" required />
+          <div class="form-text small mt-2">This password is checked client-side for demo only.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Unlock Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm delete -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <p class="mb-3">Delete this product?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+            <button data-bs-dismiss="modal" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  /**
+   * Final fixed version:
+   * - Admin-only edit/delete (customers cannot)
+   * - Sales analytics (counts + rupee totals) visible only in admin
+   * - Orders recorded when user clicks WhatsApp send (wa.me)
+   * - Size selection handled per-product
+   *
+   * SECURITY: client-side admin password is visible in source — use server-side auth for production.
+   */
+
+  (function(){
+    'use strict';
+
+    // constants
+    const ADMIN_PW = 'darpan2025';
+    const PRODUCTS_KEY = 'darpan_products_v_final';
+    const SALES_KEY = 'darpan_sales_v_final';
+    const WHATSAPP_PHONE = '919332307996';
+    const CATEGORY_LIST = ['All','Shirts','T-Shirts','Jeans','Shoes','Electronic Devices'];
+
+    // DOM
+    const categoryNav = document.getElementById('categoryNav');
+    const categoryPills = document.getElementById('categoryPills');
+    const productGrid = document.getElementById('productGrid');
+    const resultCount = document.getElementById('resultCount');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearch');
+
+    const adminBtn = document.getElementById('adminBtn');
+    const openAdminLogin = document.getElementById('openAdminLogin');
+    const adminArea = document.getElementById('adminArea');
+    const adminAreaPlaceholder = document.getElementById('adminAreaPlaceholder');
+    const adminForm = document.getElementById('adminForm');
+    const adminProductList = document.getElementById('adminProductList');
+    const adminSaveBtn = document.getElementById('adminSaveBtn');
+    const adminClearBtn = document.getElementById('adminClearBtn');
+    const adminLogout = document.getElementById('adminLogout');
+
+    const orderModalEl = document.getElementById('orderModal');
+    const orderModal = new bootstrap.Modal(orderModalEl);
+    const orderProductSummary = document.getElementById('orderProductSummary');
+    const orderSizeContainer = document.getElementById('orderSizeContainer');
+
+    const payCodBtn = document.getElementById('payCodBtn');
+    const payOnlineBtn = document.getElementById('payOnlineBtn');
+
+    const adminPassModal = new bootstrap.Modal(document.getElementById('adminPassModal'));
+    const adminPassForm = document.getElementById('adminPassForm');
+    const adminPasswordInput = document.getElementById('adminPassword');
+
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+    // chart
+    const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+    let salesChart = null;
+
+    // state
+    let products = [];
+    let sales = [];
+    let activeCategory = 'All';
+    let currentOrderProduct = null;
+    let deleteCandidateId = null;
+    let adminUnlocked = false;
+
+    // helpers
+    function uid(){ return 'p_' + Math.random().toString(36).slice(2,9); }
+    function escapeHtml(s){ if(s===undefined||s===null) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;"); }
+    function formatCurrency(n){ if(n===''||n===null||n===undefined||isNaN(Number(n))) return ''; return '₹'+Number(n).toLocaleString('en-IN'); }
+    function placeholderDataUrl(w,h,text){ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'><rect width='100%' height='100%' fill='%23e9ecef'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23838a91' font-size='20'>${text}</text></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); }
+
+    // storage
+    function loadProducts(){ const raw = localStorage.getItem(PRODUCTS_KEY); if(!raw){ products = seedProducts(); saveProducts(); return; } try{ products = JSON.parse(raw) || []; } catch(e){ products = []; saveProducts(); } }
+    function saveProducts(){ localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products)); }
+
+    function loadSales(){ const raw = localStorage.getItem(SALES_KEY); if(!raw){ sales = []; saveSales(); return; } try{ sales = JSON.parse(raw) || []; } catch(e){ sales = []; saveSales(); } }
+    function saveSales(){ localStorage.setItem(SALES_KEY, JSON.stringify(sales)); }
+
+    function seedProducts(){
+      return [
+        { id: uid(), name:'Classic Blue Shirt', desc:'Comfort-fit cotton shirt', category:'Shirts', origPrice:999, sellPrice:699, specialPrice:599, material:'Cotton', size:'M,L,XL', img:'https://images.unsplash.com/photo-1520975912605-1b2e2b5e01b4?q=80&w=800&auto=format&fit=crop' },
+        { id: uid(), name:'Everyday Tee', desc:'Soft breathable T-shirt', category:'T-Shirts', origPrice:399, sellPrice:249, specialPrice:'', material:'Jersey Cotton', size:'S,M,L', img:'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop' },
+        { id: uid(), name:'Midway Denim Jeans', desc:'Regular-fit denim', category:'Jeans', origPrice:1499, sellPrice:1099, specialPrice:999, material:'Denim', size:'30,32,34', img:'https://images.unsplash.com/photo-1555529771-53d4f2b8b1d4?q=80&w=800&auto=format&fit=crop' }
+      ];
+    }
+
+    // categories UI
+    function renderCategoryNav(){
+      categoryNav.innerHTML = '';
+      CATEGORY_LIST.forEach(cat=>{
+        const li = document.createElement('li'); li.className='nav-item';
+        li.innerHTML = `<a class="nav-link nav-category ${cat==='All'?'active':''}" data-cat="${cat}" href="#">${escapeHtml(cat)}</a>`;
+        categoryNav.appendChild(li);
+      });
+
+      // pills
+      categoryPills.innerHTML = '';
+      CATEGORY_LIST.forEach(cat=>{
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-sm me-2 mb-2 ' + (cat==='All' ? 'btn-primary' : 'btn-outline-secondary');
+        btn.textContent = cat;
+        btn.dataset.cat = cat;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#categoryPills button').forEach(b=>{ b.classList.remove('btn-primary'); b.classList.add('btn-outline-secondary'); });
+          btn.classList.remove('btn-outline-secondary'); btn.classList.add('btn-primary');
+          document.querySelectorAll('.nav-category').forEach(i=>i.classList.remove('active'));
+          const top = document.querySelector(`.nav-category[data-cat="${cat}"]`);
+          if(top) top.classList.add('active');
+          activeCategory = cat;
+          renderProducts();
+        });
+        categoryPills.appendChild(btn);
+      });
+
+      document.querySelectorAll('.nav-category').forEach(el=>{
+        el.addEventListener('click', function(e){
+          e.preventDefault();
+          document.querySelectorAll('.nav-category').forEach(i=>i.classList.remove('active'));
+          this.classList.add('active');
+          activeCategory = this.dataset.cat || 'All';
+          document.querySelectorAll('#categoryPills button').forEach(b=>{ b.classList.remove('btn-primary'); b.classList.add('btn-outline-secondary'); });
+          const pill = Array.from(document.querySelectorAll('#categoryPills button')).find(b=>b.dataset.cat===activeCategory);
+          if(pill){ pill.classList.remove('btn-outline-secondary'); pill.classList.add('btn-primary'); }
+          renderProducts();
+        });
+      });
+    }
+
+    // product grid: **customers cannot see edit/delete in cards**
+    function renderProducts(){
+      const q = (searchInput.value||'').trim().toLowerCase();
+      const filtered = products.filter(p=>{
+        const matchCat = (activeCategory==='All') || (p.category===activeCategory);
+        const matchSearch = q==='' || (p.name && p.name.toLowerCase().includes(q));
+        return matchCat && matchSearch;
+      });
+
+      productGrid.innerHTML = '';
+      if(filtered.length===0){
+        productGrid.innerHTML = `<div class="col-12"><div class="p-4 text-center bg-white rounded shadow-sm">No products found.</div></div>`;
+      } else {
+        filtered.forEach(p=>{
+          const col = document.createElement('div'); col.className='col-12 col-sm-6 col-lg-4';
+          const imgUrl = p.img && p.img.trim()!=='' ? p.img : placeholderDataUrl(600,400,'No Image');
+          const displayedPrice = (p.specialPrice && p.specialPrice!=='') ? p.specialPrice : p.sellPrice;
+          const priceDisplay = (p.specialPrice && p.specialPrice!=='') ?
+            `<span class="fw-bold">${formatCurrency(p.specialPrice)}</span> <small class="badge badge-sp ms-1">Special</small><div><small class="price-old">${formatCurrency(p.sellPrice)}</small></div>` :
+            `<span class="fw-bold">${formatCurrency(p.sellPrice)}</span>`;
+
+          col.innerHTML = `
+            <article class="card product-card h-100" aria-label="${escapeHtml(p.name)} card">
+              <img src="${escapeHtml(imgUrl)}" class="product-img card-img-top" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='${placeholderDataUrl(600,400,'No Image')}';">
+              <div class="card-body d-flex flex-column">
+                <h6 class="card-title mb-1">${escapeHtml(p.name)}</h6>
+                <p class="card-text small text-muted mb-2">${escapeHtml(p.desc||'')}</p>
+                <div class="mb-2">${priceDisplay}</div>
+                <ul class="list-unstyled small text-muted mb-3">
+                  <li><strong>Material:</strong> ${escapeHtml(p.material||'—')}</li>
+                  <li><strong>Size:</strong> ${escapeHtml(p.size||'—')}</li>
+                  <li><strong>Category:</strong> ${escapeHtml(p.category||'—')}</li>
+                </ul>
+                <div class="mt-auto d-flex gap-2">
+                  <button class="btn btn-primary flex-grow-1 order-now-btn" data-id="${escapeHtml(p.id)}">Order Now</button>
+                  ${adminUnlocked ? `<div class="btn-group">
+                    <button class="btn btn-outline-secondary icon-btn card-edit-btn" data-id="${escapeHtml(p.id)}" title="Edit">✎</button>
+                    <button class="btn btn-outline-danger icon-btn card-del-btn" data-id="${escapeHtml(p.id)}" title="Delete">🗑</button>
+                  </div>` : ''}
+                </div>
+              </div>
+            </article>
+          `;
+          productGrid.appendChild(col);
+        });
+      }
+
+      resultCount.textContent = `${filtered.length} product(s)`;
+      attachProductHandlers();
+      renderAdminProductList();
+    }
+
+    // attach handlers (order always visible; edit/delete only if adminUnlocked)
+    function attachProductHandlers(){
+      document.querySelectorAll('.order-now-btn').forEach(btn=>{
+        btn.removeEventListener('click', onOrderNow);
+        btn.addEventListener('click', onOrderNow);
+      });
+      if(adminUnlocked){
+        document.querySelectorAll('.card-edit-btn').forEach(b=>{ b.removeEventListener('click', onEditProductBtn); b.addEventListener('click', onEditProductBtn); });
+        document.querySelectorAll('.card-del-btn').forEach(b=>{ b.removeEventListener('click', onDelProductBtn); b.addEventListener('click', onDelProductBtn); });
+      }
+    }
+
+    // order flow
+    function onOrderNow(e){
+      const id = e.currentTarget.dataset.id;
+      currentOrderProduct = products.find(p=>p.id===id);
+      if(!currentOrderProduct) return alert('Product missing');
+      const price = (currentOrderProduct.specialPrice && currentOrderProduct.specialPrice!=='') ? currentOrderProduct.specialPrice : currentOrderProduct.sellPrice;
+      orderProductSummary.innerHTML = `
+        <div class="d-flex align-items-center">
+          <img src="${escapeHtml(currentOrderProduct.img||'')}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:.4rem;margin-right:.6rem;" onerror="this.onerror=null;this.src='${placeholderDataUrl(64,64,'No Image')}';">
+          <div>
+            <div class="fw-semibold">${escapeHtml(currentOrderProduct.name)}</div>
+            <div class="small text-muted">${escapeHtml(currentOrderProduct.desc||'')}</div>
+            <div class="small mt-1">Price: <strong>${formatCurrency(price)}</strong></div>
+          </div>
+        </div>
+      `;
+      // size input: create dropdown if multiple sizes exist
+      injectSizeField(currentOrderProduct);
+      orderModal.show();
+    }
+
+    function injectSizeField(product){
+      orderSizeContainer.innerHTML = '';
+      const sizesText = (product.size || '').trim();
+      if(sizesText && sizesText.includes(',')){
+        const sizes = sizesText.split(',').map(s=>s.trim()).filter(Boolean);
+        const sel = document.createElement('select');
+        sel.className = 'form-select';
+        sel.id = 'o_size';
+        sizes.forEach(s=>{ const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+        const label = document.createElement('label');
+        label.className = 'form-label'; label.textContent = 'Size';
+        orderSizeContainer.appendChild(label);
+        orderSizeContainer.appendChild(sel);
+      } else {
+        const label = document.createElement('label');
+        label.className = 'form-label'; label.textContent = 'Size';
+        const inp = document.createElement('input');
+        inp.id = 'o_size'; inp.className = 'form-control'; inp.value = sizesText || '';
+        orderSizeContainer.appendChild(label);
+        orderSizeContainer.appendChild(inp);
+      }
+    }
+
+    // build message
+    function buildOrderMessage(orderValues, paymentMethod){
+      const price = (currentOrderProduct.specialPrice && currentOrderProduct.specialPrice!=='') ? currentOrderProduct.specialPrice : currentOrderProduct.sellPrice;
+      const finalPriceText = formatCurrency(price);
+      const lines = [
+        '⚠️ Alert! Darpan Wears New Order',
+        `Product: ${currentOrderProduct.name}`,
+        `Size: ${orderValues.size || ''}`,
+        `Final Price: ${finalPriceText}`,
+        `Payment: ${paymentMethod}`,
+        `Address: ${orderValues.village || ''}, ${orderValues.city}, ${orderValues.state} - ${orderValues.pin}`,
+        `Name: ${orderValues.name}`,
+        `Phone: ${orderValues.phone}`
+      ];
+      return lines.join('\n');
+    }
+
+    function openWaMe(message){
+      const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    payCodBtn.addEventListener('click', ()=> handlePaymentChoice('Cash on Delivery'));
+    payOnlineBtn.addEventListener('click', ()=> handlePaymentChoice('Online Payment'));
+
+    function handlePaymentChoice(method){
+      const values = {
+        name: document.getElementById('o_name').value.trim(),
+        phone: document.getElementById('o_phone').value.trim(),
+        state: document.getElementById('o_state').value.trim(),
+        city: document.getElementById('o_city').value.trim(),
+        village: document.getElementById('o_village').value.trim(),
+        pin: document.getElementById('o_pin').value.trim(),
+        size: (document.getElementById('o_size') ? document.getElementById('o_size').value.trim() : '')
+      };
+      if(!values.name || !values.phone || !values.state || !values.city || !values.pin){
+        alert('Please fill all required fields.');
+        return;
+      }
+      if(!currentOrderProduct){ alert('Product missing.'); return; }
+
+      const msg = buildOrderMessage(values, method);
+      openWaMe(msg);
+
+      // record sale (only when user clicked send)
+      const priceNum = (currentOrderProduct.specialPrice && currentOrderProduct.specialPrice!=='') ? Number(currentOrderProduct.specialPrice) : Number(currentOrderProduct.sellPrice || 0);
+      const sale = {
+        id: 's_' + Date.now(),
+        productId: currentOrderProduct.id,
+        productName: currentOrderProduct.name,
+        size: values.size || '',
+        finalPrice: priceNum || 0,
+        payment: method,
+        address: { state: values.state, city: values.city, village: values.village || '', pin: values.pin },
+        customerName: values.name,
+        customerPhone: values.phone,
+        datetime: new Date().toISOString()
+      };
+      sales.unshift(sale);
+      saveSales();
+      updateSalesUI();
+      orderModal.hide();
+      alert('WhatsApp opened. Order recorded in admin sales.');
+    }
+
+    // admin logic: unlock
+    openAdminLogin.addEventListener('click', ()=> adminPassModal.show());
+    adminBtn.addEventListener('click', ()=> adminPassModal.show());
+
+    adminPassForm.addEventListener('submit', ev=>{
+      ev.preventDefault();
+      const val = adminPasswordInput.value || '';
+      if(val === ADMIN_PW){
+        adminUnlocked = true;
+        unlockAdmin();
+        adminPassModal.hide();
+        adminPasswordInput.value = '';
+      } else alert('Incorrect password.');
+    });
+
+    function unlockAdmin(){
+      adminArea.style.display = '';
+      adminArea.setAttribute('aria-hidden','false');
+      adminAreaPlaceholder.style.display = 'none';
+      renderProducts(); // re-render to show admin controls
+    }
+
+    adminLogout.addEventListener('click', ()=>{
+      adminUnlocked = false;
+      adminArea.style.display = 'none';
+      adminAreaPlaceholder.style.display = '';
+      renderProducts();
+    });
+
+    // admin add/edit
+    adminForm.addEventListener('submit', ev=>{
+      ev.preventDefault();
+      const id = document.getElementById('p_id').value;
+      const name = document.getElementById('p_name').value.trim();
+      const desc = document.getElementById('p_desc').value.trim();
+      const category = document.getElementById('p_cat').value;
+      const origPrice = document.getElementById('p_orig').value;
+      const sellPrice = document.getElementById('p_sell').value;
+      const specialPrice = document.getElementById('p_special').value;
+      const size = document.getElementById('p_size').value.trim();
+      const material = document.getElementById('p_mat').value.trim();
+      const img = document.getElementById('p_img').value.trim();
+
+      if(!name || !sellPrice){ alert('Please provide product name and selling price.'); return; }
+
+      if(id){
+        const p = products.find(x=>x.id===id);
+        if(!p){ alert('Product not found'); return; }
+        p.name = name; p.desc = desc; p.category = category;
+        p.origPrice = origPrice? Number(origPrice): '';
+        p.sellPrice = sellPrice? Number(sellPrice): '';
+        p.specialPrice = specialPrice? Number(specialPrice): '';
+        p.size = size; p.material = material; p.img = img;
+        saveProducts();
+        renderProducts();
+        adminForm.reset();
+        document.getElementById('p_id').value = '';
+        adminSaveBtn.textContent = 'Add Product';
+        alert('Product updated.');
+      } else {
+        const newP = { id: uid(), name, desc, category, origPrice: origPrice?Number(origPrice):'', sellPrice: sellPrice?Number(sellPrice):'', specialPrice: specialPrice?Number(specialPrice):'', size, material, img };
+        products.unshift(newP);
+        saveProducts();
+        renderProducts();
+        adminForm.reset();
+        alert('Product added.');
+      }
+    });
+
+    adminClearBtn.addEventListener('click', ()=> { adminForm.reset(); document.getElementById('p_id').value=''; adminSaveBtn.textContent='Add Product'; });
+
+    // admin product list (edit/delete)
+    function renderAdminProductList(){
+      adminProductList.innerHTML = '';
+      if(products.length===0){ adminProductList.innerHTML = `<div class="list-group-item small text-muted">No products</div>`; return; }
+      products.forEach(p=>{
+        const item = document.createElement('div'); item.className='list-group-item d-flex justify-content-between align-items-start';
+        item.innerHTML = `<div class="me-2 flex-grow-1"><div class="fw-semibold small">${escapeHtml(p.name)}</div><div class="small text-muted">${escapeHtml(p.category)} • ${formatCurrency((p.specialPrice && p.specialPrice!=='')?p.specialPrice:p.sellPrice)}</div></div>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-primary edit-admin-btn" data-id="${escapeHtml(p.id)}">Edit</button>
+            <button class="btn btn-outline-danger del-admin-btn" data-id="${escapeHtml(p.id)}">Delete</button>
+          </div>`;
+        adminProductList.appendChild(item);
+      });
+      document.querySelectorAll('.edit-admin-btn').forEach(b=>{ b.removeEventListener('click', onAdminEditBtn); b.addEventListener('click', onAdminEditBtn); });
+      document.querySelectorAll('.del-admin-btn').forEach(b=>{ b.removeEventListener('click', onAdminDelBtn); b.addEventListener('click', onAdminDelBtn); });
+    }
+
+    function onAdminEditBtn(e){
+      const id = e.currentTarget.dataset.id;
+      const p = products.find(x=>x.id===id);
+      if(!p) return alert('Product not found');
+      document.getElementById('p_id').value = p.id;
+      document.getElementById('p_name').value = p.name;
+      document.getElementById('p_desc').value = p.desc;
+      document.getElementById('p_cat').value = p.category;
+      document.getElementById('p_orig').value = p.origPrice || '';
+      document.getElementById('p_sell').value = p.sellPrice || '';
+      document.getElementById('p_special').value = p.specialPrice || '';
+      document.getElementById('p_size').value = p.size || '';
+      document.getElementById('p_mat').value = p.material || '';
+      document.getElementById('p_img').value = p.img || '';
+      adminSaveBtn.textContent = 'Update Product';
+      adminArea.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function onAdminDelBtn(e){
+      deleteCandidateId = e.currentTarget.dataset.id;
+      confirmDeleteModal.show();
+    }
+    function onEditProductBtn(e){
+      const id = e.currentTarget.dataset.id;
+      const p = products.find(x=>x.id===id);
+      if(!p) return alert('Product not found.');
+      unlockAndPopulateAdmin(p);
+    }
+    function unlockAndPopulateAdmin(p){
+      adminUnlocked = true;
+      unlockAdmin();
+      document.getElementById('p_id').value = p.id;
+      document.getElementById('p_name').value = p.name;
+      document.getElementById('p_desc').value = p.desc;
+      document.getElementById('p_cat').value = p.category;
+      document.getElementById('p_orig').value = p.origPrice || '';
+      document.getElementById('p_sell').value = p.sellPrice || '';
+      document.getElementById('p_special').value = p.specialPrice || '';
+      document.getElementById('p_size').value = p.size || '';
+      document.getElementById('p_mat').value = p.material || '';
+      document.getElementById('p_img').value = p.img || '';
+      adminSaveBtn.textContent = 'Update Product';
+      adminArea.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function onDelProductBtn(e){
+      deleteCandidateId = e.currentTarget.dataset.id;
+      confirmDeleteModal.show();
+    }
+
+    confirmDeleteBtn.addEventListener('click', ()=>{
+      if(!deleteCandidateId){ confirmDeleteModal.hide(); return; }
+      products = products.filter(p=>p.id !== deleteCandidateId);
+      saveProducts();
+      renderProducts();
+      deleteCandidateId = null;
+      confirmDeleteModal.hide();
+    });
+
+    // render admin list also includes card edit/delete if adminUnlocked
+    function renderAdminProductListAndCards(){
+      renderAdminProductList();
+      attachProductHandlers(); // ensure card controls present only when adminUnlocked
+    }
+
+    // search
+    searchInput.addEventListener('input', debounce(()=> renderProducts(), 200));
+    clearSearchBtn.addEventListener('click', ()=> { searchInput.value=''; renderProducts(); searchInput.focus(); });
+
+    function debounce(fn, wait){ let t; return function(){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,arguments), wait); }; }
+
+    // sales & chart
+    function updateSalesUI(){
+      // prepare per-category counts and totals
+      const counts = {}; const totals = {};
+      CATEGORY_LIST.forEach(c=>{ if(c!=='All'){ counts[c]=0; totals[c]=0; }});
+      sales.forEach(s=>{
+        const p = products.find(x=>x.id===s.productId);
+        const cat = p ? p.category : 'Other';
+        if(!counts[cat]) counts[cat]=0;
+        if(!totals[cat]) totals[cat]=0;
+        counts[cat] += 1;
+        totals[cat] += Number(s.finalPrice || 0);
+      });
+
+      const labels = Object.keys(counts).filter(k=>counts[k]>0 || totals[k]>0);
+      const dataCounts = labels.map(l=>counts[l]||0);
+      const dataTotals = labels.map(l=>totals[l]||0);
+
+      if(!salesChart){
+        salesChart = new Chart(salesChartCtx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label:'Quantity sold', data: dataCounts, backgroundColor: 'rgba(13,110,253,0.8)' },
+              { label:'Total ₹', data: dataTotals, backgroundColor: 'rgba(0,200,83,0.7)', yAxisID: 'y1' }
+            ]
+          },
+          options: {
+            responsive:true,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+              y: { beginAtZero:true, position:'left', title:{display:true, text:'Quantity'} },
+              y1: { beginAtZero:true, position:'right', grid:{ display:false }, title:{display:true, text:'Amount (₹)'} }
+            }
+          }
+        });
+      } else {
+        salesChart.data.labels = labels;
+        salesChart.data.datasets[0].data = dataCounts;
+        salesChart.data.datasets[1].data = dataTotals;
+        salesChart.update();
+      }
+
+      // recent orders
+      const salesList = document.getElementById('salesList');
+      salesList.innerHTML = '';
+      if(sales.length===0){ salesList.innerHTML = `<div class="list-group-item small text-muted">No orders yet</div>`; return; }
+      sales.slice(0,10).forEach(s=>{
+        const li = document.createElement('div'); li.className='list-group-item small';
+        li.innerHTML = `<div class="fw-semibold">${escapeHtml(s.productName)} — ${escapeHtml(s.payment)}</div>
+          <div class="text-muted small">${escapeHtml(s.customerName)} • ${escapeHtml(s.customerPhone)} • ${formatCurrency(s.finalPrice)}</div>
+          <div class="text-muted tiny">${new Date(s.datetime).toLocaleString()}</div>`;
+        salesList.appendChild(li);
+      });
+    }
+
+    // init
+    loadProducts();
+    loadSales();
+    renderCategoryNav();
+    renderProducts();
+    updateSalesUI();
+
+    // helpers: expose small API for debugging
+    window.DarpanWears = { products, sales, saveProducts, saveSales, renderProducts };
+
+  })();
+  </script>
+</body>
+</html>
